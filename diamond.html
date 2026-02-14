@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Alexey 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#ffd6e8,#ffeef7,#e0c3fc);
+    overflow:hidden;
+    transition:1.5s;
+}
+
+.container{
+    background:white;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.1);
+    text-align:center;
+    max-width:420px;
+    width:90%;
+    position:relative;
+}
+
+h1{
+    font-family:'Pacifico',cursive;
+    color:#ff4f81;
+    margin-bottom:20px;
+}
+
+.question{
+    font-size:17px;
+    margin-bottom:20px;
+    color:#444;
+}
+
+button{
+    display:block;
+    width:100%;
+    margin:8px 0;
+    padding:10px;
+    border:none;
+    border-radius:20px;
+    background:#ff4f81;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:16px;
+}
+
+button:hover{
+    background:#ff1f63;
+}
+
+.result{
+    font-size:20px;
+    color:#ff1f63;
+    margin-top:20px;
+}
+
+#noBtn{
+    position:absolute;
+    width:120px;
+    cursor:default;
+}
+
+#yesBtn{
+    transition:0.3s;
+}
+
+#teaseText{
+    margin-top:10px;
+    font-size:14px;
+    color:#ff4f81;
+    font-weight:500;
+    opacity:0;
+    transition:0.3s;
+}
+
+/* SHAKE */
+@keyframes shake {
+    0% { transform: translate(0px, 0px); }
+    20% { transform: translate(-5px, 5px); }
+    40% { transform: translate(5px, -5px); }
+    60% { transform: translate(-5px, -5px); }
+    80% { transform: translate(5px, 5px); }
+    100% { transform: translate(0px, 0px); }
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+/* GLOWING NAME */
+@keyframes glow {
+    0% { text-shadow: 0 0 5px #ff4f81, 0 0 10px #ff4f81; }
+    50% { text-shadow: 0 0 20px #ff1f63, 0 0 40px #ff1f63; }
+    100% { text-shadow: 0 0 5px #ff4f81, 0 0 10px #ff4f81; }
+}
+
+.glowName {
+    font-size:26px;
+    font-weight:700;
+    animation: glow 1.5s infinite;
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="container">
+    <h1>Hi Alexey 💕</h1>
+    <div id="quiz">
+        <div class="question" id="question">Loading question...</div>
+        <div id="answers"></div>
+    </div>
+</div>
+
+<script>
+
+const quizData = [
+{
+    question: "Who makes your days a little brighter? ☀",
+    answers: ["You", "Me", "reading books", "Sleep"],
+    correct: 1
+},
+{
+    question: "What makes you smile the most? 😊",
+    answers: ["Movie", "Food", "Us talking", "Random things"],
+    correct: 2
+},
+{
+    question: "Who secretly adores Alexey the most? 💖",
+    answers: ["anya", "The world", "Me obviously", "Your pillow"],
+    correct: 2
+}
+];
+
+let currentQuestion = 0;
+let score = 0;
+let yesSize = 1;
+
+function loadQuestion(){
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+
+    questionEl.textContent = quizData[currentQuestion].question;
+    answersEl.innerHTML = "";
+
+    quizData[currentQuestion].answers.forEach((answer,index)=>{
+        const button = document.createElement("button");
+        button.textContent = answer;
+        button.onclick = ()=> selectAnswer(index);
+        answersEl.appendChild(button);
+    });
+}
+
+function selectAnswer(index){
+    if(index === quizData[currentQuestion].correct){
+        score++;
+    }
+    currentQuestion++;
+
+    if(currentQuestion < quizData.length){
+        loadQuestion();
+    } else {
+        showFinalQuestion();
+    }
+}
+
+function showFinalQuestion(){
+    const quiz = document.getElementById("quiz");
+    quiz.innerHTML = `
+        <div class="question">One last question... 💭<br><br>Do you want to start our story again? 💕</div>
+        <button id="yesBtn" onclick="yesClicked()">Yes 💖</button>
+        <button id="noBtn">No 🙈</button>
+        <div id="teaseText">You can't escape your feelings 😏💕</div>
+    `;
+
+    const noBtn = document.getElementById("noBtn");
+    // Runaway NO nonstop
+    setInterval(() => moveButton(), 150);
+}
+
+function moveButton(){
+    const btn = document.getElementById("noBtn");
+    const container = document.getElementById("container");
+    const yesBtn = document.getElementById("yesBtn");
+    const teaseText = document.getElementById("teaseText");
+
+    const maxX = container.clientWidth - btn.clientWidth;
+    const maxY = container.clientHeight - btn.clientHeight;
+
+    btn.style.left = Math.random() * maxX + "px";
+    btn.style.top = Math.random() * maxY + "px";
+
+    yesSize += 0.05;
+    yesBtn.style.transform = `scale(${yesSize})`;
+
+    teaseText.style.opacity = 1;
+
+    container.classList.add("shake");
+    setTimeout(() => container.classList.remove("shake"), 300);
+}
+
+function yesClicked(){
+    const quiz = document.getElementById("quiz");
+
+    document.body.style.background = "linear-gradient(135deg,#ff9a9e,#fad0c4)";
+
+    quiz.innerHTML = `
+        <div class="result">
+            <div class="glowName">Alexey 💕</div>
+            <br>
+            There was never a No option. 😌✨
+            <br><br>
+            You were always choosing Yes.
+        </div>
+    `;
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
